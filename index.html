@@ -3,7 +3,10 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Portfolio — 4 tiles</title>
+<title>Jakub Janicki portfolio</title>
+
+<!-- Favicon -->
+<link rel="icon" type="image/svg+xml" href="./Vector_logo.svg" />
 
 <!-- Archivo font -->
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,16 +19,16 @@
     --text:#e7eaf0;
     --orange:#E84923;
     --muted:#9aa3b3;
-    --back: cubic-bezier(.68,-0.55,.27,1.55); /* ease in/out back */
+    --back: cubic-bezier(.68,-0.55,.27,1.55);
     --radius:18px;
     --gap:10px;
 
-    /* desktop — icon sizes (unchanged) */
+    /* desktop icon sizes (zostawione) */
     --logo-idle-size:130px;
     --logo-active-size:200px;
     --logo-active-top:24px;
 
-    /* desktop — resting grid */
+    /* grid (spoczynek) */
     --c1:1fr; --c2:1fr; --c3:1fr; --c4:1fr;
 
     /* icon colors */
@@ -77,7 +80,7 @@
 
   .inner{ position:absolute; inset:0; padding:22px 24px; display:flex; flex-direction:column; justify-content:flex-end }
 
-  /* ===== Icon (inline SVG via currentColor) ===== */
+  /* Icon (inline SVG via currentColor) */
   .logo{
     position:absolute; left:50%; top:50%;
     width:var(--logo-idle-size); height:var(--logo-idle-size);
@@ -98,7 +101,7 @@
   }
   .logo svg{ width:100%; height:100%; display:block }
 
-  /* ===== Content ===== */
+  /* Content */
   .content{
     position:absolute; inset:auto 24px 24px 24px; max-width:520px;
     opacity:0; transform: translateY(10px);
@@ -116,54 +119,45 @@
     color: var(--title);
   }
   .hint{
-    margin:0 0 10px;
+    margin:0 0 12px;
     font-weight:600;
     font-size: 13px;
     letter-spacing:.02em;
     color: var(--title);
     opacity:.9;
-    display:flex; align-items:center; gap:8px;
+    display:inline-flex; align-items:center; gap:8px;
+    padding:6px 10px;
+    border:1px solid rgba(15,17,21,.25);
+    border-radius:10px;
+    background: rgba(15,17,21,.07);
   }
   .hint svg{ width:16px; height:16px; display:block }
   .content p{
-    margin:0 0 12px;
+    margin:0;
     font-size: clamp(13px,1.4vw,16px);
     color: var(--body);
   }
-  .btn{
-    display:inline-block; text-decoration:none; background:#0f1115; color:#fff;
-    padding:8px 14px; border-radius:12px; font-weight:600; font-size:14px; border:1px solid #0f1115;
-    transition: transform .25s var(--back), box-shadow .25s ease, background .25s ease;
-  }
-  .btn:hover{ transform: translateY(-2px); box-shadow:0 10px 20px rgba(0,0,0,.25) }
-  .btn:active{ transform:none; background:#171b22 }
 
   @media (prefers-reduced-motion: reduce){
-    .tiles, .tile, .logo, .content, .btn{ transition:none !important }
+    .tiles, .tile, .logo, .content{ transition:none !important }
   }
 
-  /* ===== MOBILE / TABLET tweaks (as requested previously) ===== */
+  /* MOBILE / TABLET: mniejsze ikony + wyżej osadzony tekst */
   @media (max-width: 900px){
     :root{
       --gap:8px;
-      /* ~10% smaller idle than desktop-mobile before */
-      --logo-idle-size: 76px;
-      --logo-active-size: 118px;
-      --logo-active-top: calc(env(safe-area-inset-top, 0px) + 36px);
+      --logo-idle-size:84px;
+      --logo-active-size:136px;
+      --logo-active-top:16px;
     }
-    .content{ max-width: 78vw; }
+    /* podnieś trochę content w pionie (zamiast przy samej krawędzi) */
+    .content{
+      inset:auto 20px 44px 20px;  /* bottom 44px zamiast 24px -> wyżej */
+      max-width: 78vw;
+    }
     .content h2{ font-size: clamp(18px,4.8vw,22px) }
+    .hint{ font-size:12px; padding:5px 9px }
     .content p{ font-size: clamp(13px,3.8vw,16px) }
-    .hint{ font-size:12px }
-  }
-
-  @media (max-width: 480px){
-    :root{
-      --logo-idle-size: 70px;
-      --logo-active-size: 108px;
-      --logo-active-top: calc(env(safe-area-inset-top, 0px) + 40px);
-    }
-    .hint{ font-size:11px }
   }
 </style>
 </head>
@@ -190,13 +184,12 @@
           <p><strong>Jakub Janicki</strong> — management, graphic design, 3D art, backend / DevOps.<br>
              Phone: +48&nbsp;577&nbsp;242&nbsp;145 · Email: klemens.janicki@gmail.com
           </p>
-          <span class="btn">Email me</span>
         </div>
       </div>
     </a>
 
     <!-- 2: GitHub -->
-    <a class="tile" href="https://github.com/TWOJ_NICK" target="_blank" rel="noopener" aria-label="GitHub — projects & code">
+    <a class="tile" href="https://github.com/AllEyesOnMyPon" target="_blank" rel="noopener" aria-label="GitHub — projects & code">
       <div class="logo" aria-hidden="true">
         <!-- Vector_GitHub.svg -->
         <svg viewBox="0 0 200 196" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -210,14 +203,13 @@
             Click to view
             <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M5 12h12.2l-4.6-4.6 1.4-1.4L21 12l-7 6-1.4-1.4 4.6-4.6H5z"/></svg>
           </div>
-          <p>A few of my backend / DevOps projects and experiments.</p>
-          <span class="btn">Open GitHub</span>
+          <p>A few of my backend / DevOps projects.</p>
         </div>
       </div>
     </a>
 
     <!-- 3: Google Drive -->
-    <a class="tile" href="https://drive.google.com/drive/folders/TWOJE_FOLDER_ID" target="_blank" rel="noopener" aria-label="Google Drive — graphic design, animation, CAD, artworks">
+    <a class="tile" href="https://drive.google.com/drive/folders/1bUMIAG7cDIrr84l5N_dWs7pUFRCzXJlq?usp=sharing" target="_blank" rel="noopener" aria-label="Google Drive — graphic design, animation, CAD, artworks">
       <div class="logo" aria-hidden="true">
         <!-- Vector_GoogleDrive.svg -->
         <svg viewBox="0 0 200 174" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -231,14 +223,13 @@
             Click to view
             <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M5 12h12.2l-4.6-4.6 1.4-1.4L21 12l-7 6-1.4-1.4 4.6-4.6H5z"/></svg>
           </div>
-          <p>Graphic design, animation, CAD, and assorted artworks.</p>
-          <span class="btn">Open folder</span>
+          <p>Graphic design, animation, CAD, artworks.</p>
         </div>
       </div>
     </a>
 
     <!-- 4: Instagram -->
-    <a class="tile" href="https://instagram.com/TWOJ_NICK" target="_blank" rel="noopener" aria-label="Instagram — CGI artbook journal">
+    <a class="tile" href="https://instagram.com/ancient_forest_tales" target="_blank" rel="noopener" aria-label="Instagram — CGI artbook journal">
       <div class="logo" aria-hidden="true">
         <!-- Vector_insta (currentColor) -->
         <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -255,7 +246,6 @@
             <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M5 12h12.2l-4.6-4.6 1.4-1.4L21 12l-7 6-1.4-1.4 4.6-4.6H5z"/></svg>
           </div>
           <p>CGI artbook journal — selected renders and behind-the-scenes.</p>
-          <span class="btn">Open profile</span>
         </div>
       </div>
     </a>

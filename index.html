@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Portfolio — 4 kafelki</title>
+<meta name="description" content="Link-hub portfolio: Vector Logo (o mnie), GitHub, Google Drive, Instagram." />
+<style>
+  /* ====== USTAWIENIA OGÓLNE ====== */
+  :root{
+    --bg: #0f1115;
+    --pane: #141821;              /* tło nieaktywnego kafelka */
+    --text: #e7eaf0;
+    --muted: #a3adbb;
+    --orange: #E84923;            /* tło aktywnego kafelka */
+    --logo-idle: #e0e0e0;
+    --logo-active: #1c1c1c;
+    --back: cubic-bezier(.68,-0.55,.27,1.55);  /* ease-in-out-back z overshootem */
+    --radius: 18px;
+
+    /* szerokości przy 4 kolumnach */
+    --w-default: 25vw;            /* ~360px na 1440 */
+    --w-expanded: 50vw;           /* ~720px */
+    --w-collapsed: calc((100vw - var(--w-expanded)) / 3); /* ~240px */
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%; margin:0}
+  body{
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans";
+    overflow: hidden;             /* brak scrolla */
+  }
+
+  /* ====== SIATKA KAFELKÓW ====== */
+  .tiles{
+    display:flex;
+    width:100vw;
+    height:100vh;
+    gap:0;
+  }
+  .tile{
+    position:relative;
+    flex: 0 0 var(--w-default);
+    height:100%;
+    background: var(--pane);
+    border-right: 1px solid #1c2230;
+    transition:
+      flex-basis .72s var(--back),
+      background-color .5s var(--back);
+    isolation:isolate;
+    outline: none;
+  }
+  .tile:last-child{ border-right: none; }
+
+  /* Gdy kursor jest nad siatką: wszystkie kafelki kurczą się... */
+  .tiles:hover .tile,
+  .tiles:focus-within .tile{
+    flex-basis: var(--w-collapsed);
+  }
+  /* ...a kafelek pod kursorem (lub fokus) rozszerza się */
+  .tiles:hover .tile:hover,
+  .tiles:focus-within .tile:focus{
+    flex-basis: var(--w-expanded);
+    background: var(--orange);
+  }
+
+  /* Wnętrze kafelka */
+  .inner{
+    position:absolute; inset:0;
+    padding: 28px;
+    display:flex; flex-direction:column; align-items:flex-start; justify-content:flex-end;
+  }
+
+  /* ====== LOGO (SVG) ====== */
+  .logo{
+    position:absolute;
+    left:50%; top:50%;
+    width:130px; height:130px;
+    transform: translate(-50%,-50%);
+    color: var(--logo-idle);
+    transition:
+      left .72s var(--back),
+      top .72s var(--back),
+      transform .72s var(--back),
+      width .72s var(--back),
+      height .72s var(--back),
+      color .45s var(--back);
+    z-index: 2;
+    pointer-events:none;
+  }
+  .logo svg{ width:100%; height:100%; display:block; }
+
+  /* Po aktywacji kafelka: logo do góry/prawej, większe i ciemne */
+  .tiles:hover .tile:hover .logo,
+  .tiles:focus-within .tile:focus .logo,
+  .tile.active .logo{
+    left: calc(100% - 28px);
+    top: 28px;
+    transform: translate(-100%, 0);
+    width:200px; height:200px;
+    color: var(--logo-active);
+  }
+
+  /* ====== TREŚĆ (tytuł, opis, przycisk) ====== */
+  .content{
+    position:absolute; inset:auto 28px 28px 28px;
+    max-width: 540px;
+    opacity: 0; transform: translateY(10px);
+    transition: opacity .45s ease, transform .45s ease;
+    z-index: 1;
+    pointer-events: none;
+  }
+  .content h2{
+    margin:0 0 8px;
+    font-size: clamp(20px, 3.2vw, 32px);
+    line-height:1.15;
+  }
+  .content p{
+    margin:0 0 16px;
+    color: #0f1115;            /* na pomarańczowym — ciemny tekst dla kontrastu */
+    font-size: clamp(14px, 1.6vw, 18px);
+  }
+  .content ul{ margin: 0 0 16px 18px; color:#0f1115; }
+  .content li{ margin:4px 0 }
+
+  .btn{
+    display:inline-block;
+    text-decoration:none;
+    background:#0f1115;
+    color:#fff;
+    padding:10px 16px;
+    border-radius:12px;
+    font-weight:600;
+    border:1px solid #0f1115;
+    transition: transform .25s var(--back), box-shadow .25s ease;
+  }
+  .btn:hover{ transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0,0,0,.25); }
+
+  /* Pokaż treść tylko gdy kafelek aktywny */
+  .tiles:hover .tile:hover .content,
+  .tiles:focus-within .tile:focus .content,
+  .tile.active .content{
+    opacity:1; transform:none; pointer-events:auto;
+  }
+
+  /* Stan nieaktywny: tytuł pod logo (dla orientacji) */
+  .label{
+    position:absolute; left:50%; top: calc(50% + 100px);
+    transform: translate(-50%, 0);
+    color: var(--muted);
+    font-size: 14px;
+    transition: opacity .3s ease;
+    opacity:.85;
+    pointer-events:none;
+  }
+  /* Gdy aktywne — ukryj label (zastępuje go content) */
+  .tiles:hover .tile:hover .label,
+  .tiles:focus-within .tile:focus .label,
+  .tile.active .label{
+    opacity:0;
+  }
+
+  /* Dostępność / redukcja ruchu */
+  @media (prefers-reduced-motion: reduce){
+    .tile, .logo, .content, .btn{ transition:none !important }
+  }
+
+  /* Prosty fallback dla bardzo wąskich ekranów (opcjonalnie można dopracować) */
+  @media (max-width: 900px){
+    :root{
+      --w-default: 25vw;
+      --w-expanded: 60vw;
+      --w-collapsed: calc((100vw - var(--w-expanded)) / 3);
+    }
+  }
+</style>
+</head>
+<body>
+
+  <main class="tiles" id="tiles">
+    <!-- 1) VECTOR LOGO / O MNIE -->
+    <section class="tile t-about" tabindex="0" aria-label="O mnie i kontakt">
+      <div class="logo" aria-hidden="true">
+        <!-- TODO: podmień na swój SVG z Figmy -->
+        <svg viewBox="0 0 64 64" fill="currentColor" aria-hidden="true">
+          <circle cx="32" cy="32" r="28" stroke="currentColor" stroke-width="6" fill="none"/>
+          <path d="M20 34 L32 18 L44 34 L32 46 Z" fill="currentColor"/>
+        </svg>
+      </div>
+      <div class="label">Vector Logo / O mnie</div>
+
+      <div class="inner">
+        <div class="content">
+          <h2>O mnie & kontakt</h2>
+          <p>Backend/DevOps + grafika 2D/3D. Tu złapiesz mnie najszybciej i zobaczysz skrót wybranych rzeczy.</p>
+          <a class="btn" href="mailto:twojemail@domena.pl">Napisz do mnie</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2) GITHUB -->
+    <section class="tile t-github" tabindex="0" aria-label="GitHub — projekty i kod">
+      <div class="logo" aria-hidden="true">
+        <!-- TODO: podmień na swój SVG z Figmy (np. znak GH albo własny) -->
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 .5a12 12 0 0 0-3.79 23.39c.6.11.82-.26.82-.58v-2.02c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.74.08-.73.08-.73 1.2.08 1.83 1.24 1.83 1.24 1.07 1.84 2.8 1.31 3.48 1 .11-.78.42-1.31.76-1.61-2.66-.3-5.46-1.33-5.46-5.9 0-1.31.47-2.37 1.24-3.21-.13-.3-.54-1.5.12-3.13 0 0 1.01-.32 3.3 1.23.96-.27 1.99-.4 3.01-.4s2.05.14 3.01.4c2.29-1.55 3.3-1.23 3.3-1.23.66 1.63.25 2.83.12 3.13.77.84 1.24 1.9 1.24 3.21 0 4.58-2.8 5.59-5.47 5.89.43.37.81 1.1.81 2.23v3.31c0 .32.22.7.82.58A12 12 0 0 0 12 .5z"/>
+        </svg>
+      </div>
+      <div class="label">GitHub</div>
+
+      <div class="inner">
+        <div class="content">
+          <h2>GitHub — to repozytorium kodu</h2>
+          <p>To portfolio techniczne: Python, Docker, CI/CD, Prometheus/Loki, C4/ADR, agent NIS2 i więcej.</p>
+          <a class="btn" href="https://github.com/TWOJ_NICK" target="_blank" rel="noopener">Przejdź do GitHuba</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3) GOOGLE DRIVE -->
+    <section class="tile t-drive" tabindex="0" aria-label="Google Drive — layout/logo/CAD/animacje">
+      <div class="logo" aria-hidden="true">
+        <!-- TODO: podmień na swój SVG z Figmy (np. trójkąt Drive lub własny znak) -->
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M7.9 3 11.5 9.2H5L1.4 3H7.9zm8.2 0 6.5 11.2-3.6 6.2-7.4-11 4.5-6.4zM2.9 15.8 6.5 22H20l-3.6-6.2H2.9z"/>
+        </svg>
+      </div>
+      <div class="label">Google Drive</div>
+
+      <div class="inner">
+        <div class="content">
+          <h2>Google Drive — zbiory projektów</h2>
+          <p>Layout design, logo design, CAD oraz animacje — posegregowane paczki do szybkiego podejrzenia.</p>
+          <a class="btn" href="https://drive.google.com/drive/folders/TWOJE_FOLDER_ID" target="_blank" rel="noopener">Otwórz folder</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4) INSTAGRAM -->
+    <section class="tile t-ig" tabindex="0" aria-label="Instagram — CGI artbook">
+      <div class="logo" aria-hidden="true">
+        <!-- TODO: podmień na swój SVG z Figmy -->
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="5" ry="5"/>
+          <circle cx="12" cy="12" r="4.5" fill="#00000000" stroke="currentColor" stroke-width="2.4"/>
+          <circle cx="17.2" cy="6.8" r="1.6"/>
+        </svg>
+      </div>
+      <div class="label">Instagram</div>
+
+      <div class="inner">
+        <div class="content">
+          <h2>Instagram — CGI artbook</h2>
+          <p>Wybrane rendery i krótkie procesy „od kulis”. Regularne uzupełnianie feedu.</p>
+          <a class="btn" href="https://instagram.com/TWOJ_NICK" target="_blank" rel="noopener">Mój profil</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+<script>
+  // ====== WSPARCIE DLA URZĄDZEŃ DOTYKOWYCH (brak :hover) ======
+  // Pierwszy tap — rozszerza kafelek (ustawia .active), drugi tap w przycisk — przechodzi dalej.
+  const tiles = Array.from(document.querySelectorAll('.tile'));
+  const isTouch = matchMedia('(hover: none)').matches;
+
+  if (isTouch) {
+    tiles.forEach(tile => {
+      tile.addEventListener('click', (e) => {
+        // Jeśli już aktywny i kliknięto w przycisk - pozwól przejść (domyślne)
+        const btn = e.target.closest('.btn');
+        if (btn) return;
+
+        // Jeśli nieaktywny — aktywuj i zablokuj nawigację
+        if (!tile.classList.contains('active')) {
+          e.preventDefault();
+          tiles.forEach(t => t.classList.remove('active'));
+          tile.classList.add('active');
+        }
+      });
+    });
+
+    // Klik gdziekolwiek poza kafelkami — wyłącza aktywację
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.tile')) {
+        tiles.forEach(t => t.classList.remove('active'));
+      }
+    });
+  }
+</script>
+</body>
+</html>

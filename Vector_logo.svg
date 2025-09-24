@@ -1,6 +1,6 @@
-<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g id="Group 1">
-<path id="Vector" d="M200 0H114.851V67.071H157.425H200V0Z" fill="#1C1C1C"/>
-<path id="Vector_2" d="M199.72 152.617L152.351 200L67.2202 114.808V200H0.149261V47.42L47.3321 0.167953L67.2202 20.0616L199.72 152.617Z" fill="#1C1C1C"/>
-</g>
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <g>
+    <path d="M200 0H114.851V67.071H157.425H200V0Z" fill="currentColor"/>
+    <path d="M199.72 152.617L152.351 200L67.2202 114.808V200H0.149261V47.42L47.3321 0.167953L67.2202 20.0616L199.72 152.617Z" fill="currentColor"/>
+  </g>
 </svg>

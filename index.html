@@ -4,111 +4,111 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Portfolio — 4 kafelki</title>
+<meta name="description" content="Vector Logo (o mnie), GitHub, Google Drive, Instagram — szybkie przejścia do sekcji." />
 <style>
   :root{
-    --bg:#0f1115;
-    --pane:#141821;
-    --text:#e7eaf0;
+    --bg: #0f1115;
+    --pane: #141821;
+    --text: #e7eaf0;
     --muted:#a3adbb;
     --orange:#E84923;
-    --radius:18px;
-    --gap:8px;
-
-    /* Czas poszerzania siatki (musi zgadzać się z JS) */
-    --grid-ms:720ms;
-
-    /* Rozmiary logo (responsywne) */
-    --logo-idle:clamp(56px,12vmin,130px);
-    --logo-active:clamp(92px,18vmin,200px);
+    --logo-idle:#e0e0e0;
+    --logo-active:#1c1c1c;
+    --back: cubic-bezier(.68,-0.55,.27,1.55); /* ease in/out back */
+    --radius: 18px;
+    --gap: 8px;
   }
   *{box-sizing:border-box}
   html,body{height:100%;margin:0}
   body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;overflow:hidden}
 
-  /* ====== GRID ====== */
   .frame{height:100vh;padding:var(--gap)}
   .tiles{
-    display:grid;height:100%;
-    grid-template-rows:1fr;
-    grid-template-columns:1fr 1fr 1fr 1fr; /* spoczynek: 4x25% */
-    gap:var(--gap);
-    transition:grid-template-columns var(--grid-ms) cubic-bezier(.68,-0.55,.27,1.55);
+    display:grid; height:100%;
+    grid-template-rows: 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr; /* spoczynek: równo */
+    gap: var(--gap);
+    transition: grid-template-columns .72s var(--back);
+    contain: layout paint;
   }
-  .tiles[data-active="0"]{grid-template-columns:2fr 1fr 1fr 1fr}
-  .tiles[data-active="1"]{grid-template-columns:1fr 2fr 1fr 1fr}
-  .tiles[data-active="2"]{grid-template-columns:1fr 1fr 2fr 1fr}
-  .tiles[data-active="3"]{grid-template-columns:1fr 1fr 1fr 2fr}
+  /* aktywna kolumna: 2fr, reszta po 1fr (≈ 50% / 16.67%) */
+  .tiles[data-active="0"]{ grid-template-columns: 2fr 1fr 1fr 1fr; }
+  .tiles[data-active="1"]{ grid-template-columns: 1fr 2fr 1fr 1fr; }
+  .tiles[data-active="2"]{ grid-template-columns: 1fr 1fr 2fr 1fr; }
+  .tiles[data-active="3"]{ grid-template-columns: 1fr 1fr 1fr 2fr; }
 
-  /* ====== TILE ====== */
   .tile{
-    position:relative;border-radius:var(--radius);background:var(--pane);
-    box-shadow:inset 0 0 0 1px #1b2030;
-    overflow:clip;isolation:isolate;outline:none;
-    transition:background-color .5s cubic-bezier(.68,-0.55,.27,1.55), box-shadow .5s ease;
-    contain:paint layout;
+    position:relative;
+    border-radius: var(--radius);
+    background: var(--pane);
+    box-shadow: inset 0 0 0 1px #1b2030;
+    overflow:clip; /* stabilne brzegi */
+    isolation:isolate;
+    outline:none;
+    transition: background-color .5s var(--back), box-shadow .5s ease;
+    contain: paint; /* mniej artefaktów */
   }
-  .tile:hover,.tile:focus{box-shadow:inset 0 0 0 1px #1b2030,0 10px 40px rgba(0,0,0,.35)}
-  .tile.active{background:var(--orange)}
-  .inner{position:absolute;inset:0;padding:22px 24px;display:flex;flex-direction:column;justify-content:flex-end}
+  .tile:hover, .tile:focus{ box-shadow: inset 0 0 0 1px #1b2030, 0 10px 40px rgba(0,0,0,.35); }
+  .tile.active{ background: var(--orange); }
 
-  /* ====== LOGO (IMG, responsywne) ====== */
+  .inner{position:absolute; inset:0; padding:22px 24px; display:flex; flex-direction:column; justify-content:flex-end}
+
+  /* ===== LOGO (inline SVG kolorowane przez currentColor) ===== */
   .logo{
-    position:absolute;left:50%;top:50%;
-    width:var(--logo-idle);height:var(--logo-idle);
-    transform:translate(-50%,-50%);
-    z-index:2;pointer-events:none;
+    position:absolute; left:50%; top:50%;
+    width:130px; height:130px;
+    transform: translate(-50%,-50%);
+    color: var(--logo-idle);
     transition:
-      left var(--grid-ms) cubic-bezier(.68,-0.55,.27,1.55),
-      top var(--grid-ms) cubic-bezier(.68,-0.55,.27,1.55),
-      transform var(--grid-ms) cubic-bezier(.68,-0.55,.27,1.55),
-      width var(--grid-ms) cubic-bezier(.68,-0.55,.27,1.55),
-      height var(--grid-ms) cubic-bezier(.68,-0.55,.27,1.55),
-      filter .45s ease;
-    image-rendering:auto;
+      left .72s var(--back),
+      top .72s var(--back),
+      transform .72s var(--back),
+      width .72s var(--back),
+      height .72s var(--back),
+      color .5s var(--back);
+    z-index:2; pointer-events:none;
   }
   .tile.active .logo{
-    left:calc(100% - 24px);top:24px;transform:translate(-100%,0);
-    width:var(--logo-active);height:var(--logo-active);
-    /* przy IMG nie zmienimy fill — lekko przyciemniamy; inline SVG = 100% kontrola koloru */
-    filter:brightness(25%) saturate(90%);
+    left: calc(100% - 24px);
+    top: 24px;
+    transform: translate(-100%,0);
+    width:200px; height:200px;
+    color: var(--logo-active);
   }
+  .logo svg{display:block;width:100%;height:100%}
 
-  /* ====== LABEL (tylko w spoczynku) ====== */
+  /* label pod logo (tylko w spoczynku) */
   .label{
-    position:absolute;left:50%;top:calc(50% + min(96px,9vmin));
-    transform:translateX(-50%);color:var(--muted);
-    font-size:clamp(12px,1.8vmin,13px);opacity:.85;pointer-events:none;
-    transition:opacity .3s ease;
+    position:absolute; left:50%; top: calc(50% + 96px);
+    transform: translateX(-50%);
+    color: var(--muted); font-size:13px; opacity:.85; pointer-events:none;
+    transition: opacity .3s ease;
   }
-  .tile.active .label{opacity:0}
+  .tile.active .label{ opacity:0; }
 
-  /* ====== CONTENT (pojawia się PO rozszerzeniu) ====== */
+  /* TREŚĆ – mniejsza i opóźniona pojawka */
   .content{
-    position:absolute;inset:auto 24px 24px 24px;max-width:min(520px,90%);
-    opacity:0;transform:translateY(10px);
-    transition:opacity .45s ease, transform .45s ease;
-    pointer-events:none;z-index:1;
+    position:absolute; inset:auto 24px 24px 24px; max-width:540px;
+    opacity:0; transform: translateY(10px);
+    transition: opacity .45s ease, transform .45s ease;
+    transition-delay: 260ms; /* później niż szerokość/logotyp */
+    pointer-events:none; z-index:1;
   }
-  /* JS doda .ready dopiero po zakończeniu animacji szerokości */
-  .tile.ready .content{opacity:1;transform:none;pointer-events:auto}
+  .tile.active .content{ opacity:1; transform:none; pointer-events:auto; }
 
-  .content h2{margin:0 0 6px;font-size:clamp(18px,2.4vw,26px);line-height:1.18;color:#0f1115}
-  .content p{margin:0 0 12px;font-size:clamp(13px,1.4vw,16px);color:#0f1115}
+  .content h2{margin:0 0 6px; font-size: clamp(18px,2.4vw,26px); line-height:1.18; color:#0f1115}
+  .content p{margin:0 0 12px; font-size: clamp(13px,1.4vw,16px); color:#0f1115}
   .btn{
-    display:inline-block;text-decoration:none;background:#0f1115;color:#fff;
-    padding:8px 14px;border-radius:12px;font-weight:600;font-size:14px;border:1px solid #0f1115;
-    transition:transform .25s cubic-bezier(.68,-0.55,.27,1.55), box-shadow .25s ease, background .25s ease;
+    display:inline-block; text-decoration:none; background:#0f1115; color:#fff;
+    padding:8px 14px; border-radius:12px; font-weight:600; font-size:14px;
+    border:1px solid #0f1115;
+    transition: transform .25s var(--back), box-shadow .25s ease, background .25s ease;
   }
-  .btn:hover{transform:translateY(-2px);box-shadow:0 10px 20px rgba(0,0,0,.25)}
-  .btn:active{transform:none;background:#171b22}
+  .btn:hover{ transform: translateY(-2px); box-shadow:0 10px 20px rgba(0,0,0,.25) }
+  .btn:active{ transform:none; background:#171b22 }
 
-  @media (max-width:900px){
-    :root{--gap:6px}
-    .content{max-width:86vw}
-  }
-  @media (prefers-reduced-motion:reduce){
-    .tiles,.tile,.logo,.content,.btn{transition:none!important}
-    .tile.ready .content{opacity:1;transform:none}
+  @media (prefers-reduced-motion: reduce){
+    .tiles, .tile, .logo, .content, .btn{ transition:none !important }
   }
 </style>
 </head>
@@ -118,131 +118,65 @@
   <section class="tiles" id="tiles" aria-label="Portfolio — sekcje">
 
     <!-- 0: Vector Logo / O mnie -->
-    <section class="tile" data-idx="0" tabindex="0" aria-label="O mnie i kontakt">
-      <img class="logo" data-srcs='["vector_logo.svg","Vector_logo.svg","Vector_Logo.svg"]' alt="Vector Logo">
+    <a class="tile" href="mailto:twojemail@domena.pl" data-idx="0">
+      <div class="logo" aria-hidden="true">
+        <!-- INLINE: Vector_logo.svg -->
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <g fill="currentColor">
+            <path d="M200 0H114.851V67.071H157.425H200V0Z"/>
+            <path d="M199.72 152.617L152.351 200L67.2202 114.808V200H0.149261V47.42L47.3321 0.167953L67.2202 20.0616L199.72 152.617Z"/>
+          </g>
+        </svg>
+      </div>
       <div class="label">Vector Logo / O mnie</div>
       <div class="inner">
         <div class="content">
           <h2>O mnie & kontakt</h2>
-          <p>Backend/DevOps + 2D/3D. Krótko o mnie i szybki kontakt do współpracy.</p>
-          <a class="btn" href="mailto:twojemail@domena.pl">Napisz do mnie</a>
+          <p>Backend/DevOps + grafika 2D/3D. Krótko o mnie i szybki kontakt.</p>
+          <span class="btn">Napisz do mnie</span>
         </div>
       </div>
-    </section>
+    </a>
 
     <!-- 1: GitHub -->
-    <section class="tile" data-idx="1" tabindex="0" aria-label="GitHub — projekty i kod">
-      <img class="logo" data-srcs='["vector_GitHub.svg","Vector_GitHub.svg","vector_github.svg"]' alt="GitHub">
+    <a class="tile" href="https://github.com/TWOJ_NICK" target="_blank" rel="noopener" data-idx="1">
+      <div class="logo" aria-hidden="true">
+        <!-- INLINE: Vector_GitHub.svg -->
+        <svg viewBox="0 0 200 196" xmlns="http://www.w3.org/2000/svg">
+          <path fill="currentColor" d="M100 0C44.75 0 0 44.9936 0 100.488C0 144.896 28.65 182.554 68.375 195.826C73.375 196.773 75.2083 193.666 75.2083 190.995C75.2083 188.608 75.125 182.286 75.0833 173.912C47.2667 179.974 41.4 160.429 41.4 160.429C36.85 148.831 30.275 145.733 30.275 145.733C21.2167 139.503 30.975 139.628 30.975 139.628C41.0167 140.332 46.2917 149.979 46.2917 149.979C55.2083 165.345 69.7 160.907 75.4167 158.336C76.3167 151.838 78.8917 147.408 81.75 144.896C59.5417 142.383 36.2 133.741 36.2 95.2377C36.2 84.2677 40.075 75.3075 46.4917 68.2734C45.3667 65.736 41.9917 55.5197 47.3667 41.6775C47.3667 41.6775 55.7417 38.981 74.8667 51.9775C82.8667 49.7417 91.3667 48.6363 99.8667 48.586C108.367 48.6363 116.867 49.7417 124.867 51.9775C143.867 38.981 152.242 41.6775 152.242 41.6775C157.617 55.5197 154.242 65.736 153.242 68.2734C159.617 75.3075 163.492 84.2677 163.492 95.2377C163.492 133.842 140.117 142.342 117.867 144.812C121.367 147.827 124.617 153.99 124.617 163.402C124.617 176.851 124.492 187.653 124.492 190.919C124.492 193.557 126.242 196.697 131.367 195.692C171.375 182.512 200 144.829 200 100.488C200 44.9936 155.225 0 100 0Z"/>
+        </svg>
+      </div>
       <div class="label">GitHub</div>
       <div class="inner">
         <div class="content">
-          <h2>GitHub — repozytoria & kod</h2>
+          <h2>GitHub — repozytoria i kod</h2>
           <p>Python, Docker, CI/CD, Prometheus/Loki, C4/ADR, agent NIS2 — esencja projektów.</p>
-          <a class="btn" href="https://github.com/TWOJ_NICK" target="_blank" rel="noopener">Otwórz GitHuba</a>
+          <span class="btn">Przejdź do GitHuba</span>
         </div>
       </div>
-    </section>
+    </a>
 
     <!-- 2: Google Drive -->
-    <section class="tile" data-idx="2" tabindex="0" aria-label="Google Drive — layout/logo/CAD/animacje">
-      <img class="logo" data-srcs='["Vector_GoogleDrive.svg","vector_googledrive.svg","vector_GoogleDrive.svg"]' alt="Google Drive">
+    <a class="tile" href="https://drive.google.com/drive/folders/TWOJE_FOLDER_ID" target="_blank" rel="noopener" data-idx="2">
+      <div class="logo" aria-hidden="true">
+        <!-- INLINE: Vector_GoogleDrive.svg -->
+        <svg viewBox="0 0 200 174" xmlns="http://www.w3.org/2000/svg">
+          <path fill="currentColor" d="M100.083 0C82.7333 0 68.8 0.165477 68.8917 0.388873C68.975 0.55435 83.125 25.2188 100.342 55.1621L131.675 109.555H163.008C180.35 109.555 194.283 109.389 194.192 109.166C194.15 109 179.958 84.3358 162.733 54.3926L131.4 0H100.083ZM60.4167 14.3138C50.2524 31.6951 40.169 49.1229 30.1667 66.5966L0 119.003L15.75 146.291L31.4583 173.57L61.625 121.155L91.775 68.7809L76.1083 41.5846C67.5 26.6337 60.4583 14.3635 60.4167 14.3138ZM79.2417 119.003L77.55 121.883C76.6 123.521 69.55 135.717 61.8833 149.079C57.2 157.289 52.4833 165.48 47.7333 173.653C47.65 173.868 74.7333 174 107.917 174H168.283L183.25 147.879C191.517 133.532 198.667 121.155 199.133 120.385L200 119.003H139.592H79.2417Z"/>
+        </svg>
+      </div>
       <div class="label">Google Drive</div>
       <div class="inner">
         <div class="content">
           <h2>Google Drive — zbiory projektów</h2>
-          <p>Layout/logo, CAD i animacje — uporządkowane paczki do szybkiego podejrzenia.</p>
-          <a class="btn" href="https://drive.google.com/drive/folders/TWOJE_FOLDER_ID" target="_blank" rel="noopener">Otwórz folder</a>
+          <p>Layout/logo, CAD, animacje — uporządkowane paczki do szybkiego podejrzenia.</p>
+          <span class="btn">Otwórz folder</span>
         </div>
       </div>
-    </section>
+    </a>
 
     <!-- 3: Instagram -->
-    <section class="tile" data-idx="3" tabindex="0" aria-label="Instagram — CGI artbook">
-      <img class="logo" data-srcs='["Vector_insta.svg","vector_insta.svg","vector_Insta.svg"]' alt="Instagram">
-      <div class="label">Instagram</div>
-      <div class="inner">
-        <div class="content">
-          <h2>Instagram — CGI artbook</h2>
-          <p>Wybrane rendery i krótkie „behind the scenes”.</p>
-          <a class="btn" href="https://instagram.com/TWOJ_NICK" target="_blank" rel="noopener">Mój profil</a>
-        </div>
-      </div>
-    </section>
-
-  </section>
-</main>
-
-<script>
-  // === USTAWIENIA ===
-  const GRID_MS = 720; // zgodne z --grid-ms
-
-  const grid = document.getElementById('tiles');
-  const tiles = Array.from(document.querySelectorAll('.tile'));
-  let showTimer = null;
-
-  // 1) Ładowanie ikon z fallbackami (różne wielkości liter)
-  function loadIcons() {
-    document.querySelectorAll('img.logo').forEach(img => {
-      const candidates = JSON.parse(img.getAttribute('data-srcs') || '[]');
-      const tryNext = (i=0) => {
-        if (i >= candidates.length) return;
-        const src = candidates[i];
-        const test = new Image();
-        test.onload = () => { img.src = src; };
-        test.onerror = () => tryNext(i+1);
-        test.src = src;
-      };
-      tryNext(0);
-    });
-  }
-
-  // 2) Sterowanie aktywnością i opóźnionym pokazaniem treści
-  function clearReady() {
-    tiles.forEach(t => t.classList.remove('active','ready'));
-    grid.removeAttribute('data-active');
-    if (showTimer) { clearTimeout(showTimer); showTimer = null; }
-  }
-  function setActive(idx){
-    grid.dataset.active = idx;
-    tiles.forEach((t,i)=> t.classList.toggle('active', i === +idx));
-    tiles.forEach(t => t.classList.remove('ready'));
-    if (showTimer) clearTimeout(showTimer);
-    showTimer = setTimeout(()=>{
-      const activeTile = tiles[idx];
-      if (activeTile && activeTile.classList.contains('active')) {
-        activeTile.classList.add('ready');
-      }
-    }, GRID_MS + 40);
-  }
-
-  // Desktop & klawiatura
-  tiles.forEach((t,i)=>{
-    t.addEventListener('mouseenter', ()=> setActive(i));
-    t.addEventListener('focus', ()=> setActive(i));
-  });
-  grid.addEventListener('mouseleave', clearReady);
-
-  // Mobile: pierwszy tap aktywuje, link jest tylko w PRZYCISKU
-  const isTouch = matchMedia('(hover: none)').matches;
-  if (isTouch) {
-    tiles.forEach((t,i)=>{
-      t.addEventListener('click', (e)=>{
-        // Klik w przycisk → zawsze nawiguj
-        if (e.target.closest('.btn')) return;
-        // Klik w kafel → tylko aktywuj (bez nawigacji)
-        if (!t.classList.contains('active')) {
-          e.preventDefault();
-          setActive(i);
-        }
-      });
-    });
-    // Tap poza siatką — reset
-    document.addEventListener('click', (e)=>{
-      if (!e.target.closest('.tile')) clearReady();
-    });
-  }
-
-  loadIcons();
-</script>
-</body>
-</html>
+    <a class="tile" href="https://instagram.com/TWOJ_NICK" target="_blank" rel="noopener" data-idx="3">
+      <div class="logo" aria-hidden="true">
+        <!-- INLINE: Vector_insta.svg -->
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <path fill="currentColor" d="M58.5843 0.700138C47.9442 1.2018 40.6784 2.90013 34.3258 5.39512C27.7525 7.95762 22.18 11.3951 16.6358 16.9593C11.0924 22.5234 7.67738 28.0992 5.13404 34.6842C2.67236 41.0492 1.00402 48.3217 0.534016 58.9675C0.0640135 69.6133 -0.0401536 73.0358 0.0123466 100.192C0.0640136 127.347 0.184014 130.751 0.69985 141.42C1.20819 152.057 2.89986 159.321 5.39571 165.675C7.96239 172.25 11.3957 177.82 16.9624 183.365C22.5283 188.911 28.1 192.318 34.7 194.865C41.06 197.324 48.3342 199 58.9785 199.465C69.6227 199.932 73.0485 200.04 100.197 199.988C127.345 199.936 130.764 199.815 141.429 199.31C152.096 198.804 159.321 197.1 165.677 194.615C172.252 192.044 177.826 188.615 183.367 183.048C188.909 177.48 192.322 171.9 194.863 165.311C197.327 158.951 199.002 151.678 199.463 141.041C199.93 130.367 200.04 126.96 199.988 99.8082C199.936 72.6558 199.813 69.2516 199.307 58.5875C198.802 47.9233 197.107 40.6817 194.613 34.3234C192.043 27.7492 188.613 22.1834 183.05 16.6334C177.486 11.0834 171.901 7.67345 165.316 5.13763C158.951 2.67513 151.681 0.997637 141.037 0.537638C130.393 0.0776396 126.967 -0.0415266 99.8087 0.0118065C72.6502 0.0634731 69.2502 0.180139 58.5843 0.700138ZM59.7526 181.475C50.0026 181.051 44.7084 179.431 41.18 178.075C36.5084 176.275 33.18 174.1 29.6642 170.617C26.1475 167.135 23.9883 163.796 22.1641 159.134C20.794

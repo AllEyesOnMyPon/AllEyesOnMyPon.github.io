@@ -64,7 +64,7 @@
     background:var(--pane); box-shadow: inset 0 0 0 1px #1b2030;
     overflow:hidden; isolation:isolate; outline:none;
     transition: background-color .5s var(--back), box-shadow .5s ease;
-    display:block;
+    display:block; cursor:pointer;
   }
   .tile:hover, .tile:focus{ box-shadow: inset 0 0 0 1px #1b2030, 0 10px 40px rgba(0,0,0,.35) }
   .tile:hover, .tile.active{ background:var(--orange); }
@@ -109,17 +109,22 @@
   .tile:hover .content, .tile.active .content{ opacity:1; transform:none; pointer-events:auto; }
 
   .content h2{margin:0 0 6px; font-size: clamp(18px,2.4vw,26px); line-height:1.18; color:#0f1115}
-  .content p{margin:0 0 12px; font-size: clamp(13px,1.4vw,16px); color:#0f1115}
-  .btn{
-    display:inline-block; text-decoration:none; background:#0f1115; color:#fff;
-    padding:8px 14px; border-radius:12px; font-weight:600; font-size:14px; border:1px solid #0f1115;
-    transition: transform .25s var(--back), box-shadow .25s ease, background .25s ease;
+  .content p{margin:0 0 10px; font-size: clamp(13px,1.4vw,16px); color:#0f1115}
+
+  .hint{
+    display:inline-block;
+    font-size: 13px;
+    color:#0f1115;
+    opacity:.85;
+    background: rgba(15,17,21,.08);
+    border: 1px dashed rgba(15,17,21,.25);
+    border-radius: 10px;
+    padding:6px 10px;
+    user-select:none;
   }
-  .btn:hover{ transform: translateY(-2px); box-shadow:0 10px 20px rgba(0,0,0,.25) }
-  .btn:active{ transform:none; background:#171b22 }
 
   @media (prefers-reduced-motion: reduce){
-    .tiles, .tile, .logo, .content, .btn{ transition:none !important }
+    .tiles, .tile, .logo, .content{ transition:none !important }
   }
 
   /* ===== MOBILE / TABLET: ustawienia bazowe (≤900px) ===== */
@@ -130,7 +135,7 @@
       --logo-active-size: 118px;
       --logo-active-top: calc(env(safe-area-inset-top, 0px) + 36px);
 
-      /* portrait ma własny override niżej; tu ustawiamy bezpieczne minimum */
+      /* portrait ma własny override niżej; tu bezpieczne minimum */
       --content-bottom: calc(env(safe-area-inset-bottom, 0px) + 48px);
     }
     .content{ max-width: 78vw; }
@@ -148,7 +153,6 @@
   /* ===== MOBILE LANDSCAPE: treść NIŻEJ (~1.5–2 linijki) ===== */
   @media (max-width: 900px) and (orientation: landscape){
     :root{
-      /* mniejszy odstęp od dołu => content schodzi niżej */
       --content-bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
     }
   }
@@ -167,8 +171,8 @@
 
 <main class="frame">
   <section class="tiles" id="tiles" aria-label="Portfolio — sekcje">
-    <!-- 1: Vector Logo / O mnie -->
-    <section class="tile" tabindex="0" aria-label="O mnie i kontakt">
+    <!-- 1: Vector Logo / O mnie (mailto) -->
+    <section class="tile" tabindex="0" aria-label="O mnie i kontakt" data-href="mailto:twojemail@domena.pl">
       <div class="logo" aria-hidden="true">
         <!-- Vector_logo.svg (currentColor) -->
         <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -180,13 +184,13 @@
         <div class="content">
           <h2>O mnie & kontakt</h2>
           <p>Backend/DevOps + 2D/3D. Krótko o mnie i szybki kontakt do współpracy.</p>
-          <a class="btn" href="mailto:twojemail@domena.pl">Napisz do mnie</a>
+          <span class="hint">Kliknij kafel, aby otworzyć ✉️</span>
         </div>
       </div>
     </section>
 
     <!-- 2: GitHub -->
-    <section class="tile" tabindex="0" aria-label="GitHub — projekty i kod">
+    <section class="tile" tabindex="0" aria-label="GitHub — projekty i kod" data-href="https://github.com/TWOJ_NICK">
       <div class="logo" aria-hidden="true">
         <!-- Vector_GitHub.svg (currentColor) -->
         <svg viewBox="0 0 200 196" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -197,13 +201,13 @@
         <div class="content">
           <h2>GitHub — repozytorium kodu</h2>
           <p>Python, Docker, CI/CD, Prometheus/Loki, C4/ADR, agent NIS2 — esencja projektów.</p>
-          <a class="btn" href="https://github.com/TWOJ_NICK" target="_blank" rel="noopener">Przejdź do GitHuba</a>
+          <span class="hint">Kliknij kafel, aby otworzyć ↗</span>
         </div>
       </div>
     </section>
 
     <!-- 3: Google Drive -->
-    <section class="tile" tabindex="0" aria-label="Google Drive — zbiory projektów">
+    <section class="tile" tabindex="0" aria-label="Google Drive — zbiory projektów" data-href="https://drive.google.com/drive/folders/TWOJE_FOLDER_ID">
       <div class="logo" aria-hidden="true">
         <!-- Vector_GoogleDrive.svg (currentColor) -->
         <svg viewBox="0 0 200 174" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -214,13 +218,13 @@
         <div class="content">
           <h2>Google Drive — zbiory projektów</h2>
           <p>Layout/logo, CAD i animacje — uporządkowane paczki do szybkiego podejrzenia.</p>
-          <a class="btn" href="https://drive.google.com/drive/folders/TWOJE_FOLDER_ID" target="_blank" rel="noopener">Otwórz folder</a>
+          <span class="hint">Kliknij kafel, aby otworzyć ↗</span>
         </div>
       </div>
     </section>
 
     <!-- 4: Instagram -->
-    <section class="tile" tabindex="0" aria-label="Instagram — CGI artbook">
+    <section class="tile" tabindex="0" aria-label="Instagram — CGI artbook" data-href="https://instagram.com/TWOJ_NICK">
       <div class="logo" aria-hidden="true">
         <!-- Vector_insta (currentColor) -->
         <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -233,7 +237,7 @@
         <div class="content">
           <h2>Instagram — CGI artbook</h2>
           <p>Wybrane rendery i krótkie „behind the scenes”.</p>
-          <a class="btn" href="https://instagram.com/TWOJ_NICK" target="_blank" rel="noopener">Mój profil</a>
+          <span class="hint">Kliknij kafel, aby otworzyć ↗</span>
         </div>
       </div>
     </section>
@@ -241,63 +245,84 @@
 </main>
 
 <script>
-  // Mobile-like tryb: toggle aktywności kafla (klik w kafel),
-  // przejście tylko przez przycisk .btn
+  // Klik w kafel:
+  // - na desktopie: otwiera od razu link (bo hover już go "aktywizuje" wizualnie)
+  // - na mobile (<=900px lub pointer:coarse): 1. klik aktywuje, 2. klik w aktywny otwiera link
   const tiles = Array.from(document.querySelectorAll('.tile'));
   const grid = document.querySelector('.tiles');
 
-  const isMobileLike = window.matchMedia('(max-width: 900px), (pointer: coarse)');
+  const mobileLikeMQ = window.matchMedia('(max-width: 900px), (pointer: coarse)');
+  const isMobileLike = () => mobileLikeMQ.matches;
+
   function deactivateAll(){
     tiles.forEach(t => t.classList.remove('active'));
   }
+  function openTile(tile){
+    const href = tile?.dataset?.href;
+    if (!href) return;
+    // jeśli chcesz otwierać w nowej karcie, zamień na: window.open(href, '_blank');
+    window.location.href = href;
+  }
 
-  function setupMobileHandlers(enable){
-    tiles.forEach(tile => {
-      tile.__handler && tile.removeEventListener('click', tile.__handler, {passive:false});
-      if (!enable) return;
+  function onTileClick(e){
+    const tile = e.currentTarget;
 
-      const handler = (e)=>{
-        const btn = e.target.closest('.btn');
-        if (btn) return; // tylko przycisk nawiguję
-
-        // toggle aktywny / nieaktywny
-        if (tile.classList.contains('active')) {
-          e.preventDefault();
-          tile.classList.remove('active');
-        } else {
-          e.preventDefault();
-          deactivateAll();
-          tile.classList.add('active');
-        }
-      };
-      tile.__handler = handler;
-      tile.addEventListener('click', handler, {passive:false});
-    });
-
-    // klik poza siatką = dezaktywuj
-    document.__outsideHandler && document.removeEventListener('click', document.__outsideHandler);
-    if (enable) {
-      const outsideHandler = (e)=>{
-        if (!e.target.closest('.tile')) deactivateAll();
-      };
-      document.__outsideHandler = outsideHandler;
-      document.addEventListener('click', outsideHandler);
+    if (isMobileLike()){
+      if (!tile.classList.contains('active')) {
+        e.preventDefault();
+        deactivateAll();
+        tile.classList.add('active');
+      } else {
+        // drugi klik w aktywny => otwarcie linku
+        e.preventDefault();
+        openTile(tile);
+      }
+    } else {
+      // desktop: od razu otwórz
+      openTile(tile);
     }
   }
 
-  // Inicjalizacja + reakcja na zmianę trybu/orientacji
-  function applyMode(){
-    setupMobileHandlers(isMobileLike.matches);
-    // Po zmianie rozmiaru/orientacji resetuj aktywność
+  // klawiatura: Enter/Space – mobilnie zachowuje się jak klik; desktop otwiera
+  function onTileKey(e){
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    e.preventDefault();
+    const tile = e.currentTarget;
+    if (isMobileLike()){
+      if (!tile.classList.contains('active')) {
+        deactivateAll();
+        tile.classList.add('active');
+      } else {
+        openTile(tile);
+      }
+    } else {
+      openTile(tile);
+    }
+  }
+
+  function attachHandlers(){
+    tiles.forEach(tile=>{
+      tile.addEventListener('click', onTileClick, {passive:false});
+      tile.addEventListener('keydown', onTileKey);
+    });
+    // klik poza siatką – dezaktywuj (tylko mobile-like)
+    document.addEventListener('click', (e)=>{
+      if (!isMobileLike()) return;
+      if (!e.target.closest('.tile')) deactivateAll();
+    });
+  }
+
+  // przy zmianie trybu/orientacji – reset aktywności
+  function resetOnChange(){
     deactivateAll();
-    // Usuwa dataset active z gridu (zostawiamy CSS :has na .active)
     grid && grid.removeAttribute('data-active');
   }
 
-  isMobileLike.addEventListener('change', applyMode);
-  window.addEventListener('resize', applyMode);
-  window.addEventListener('orientationchange', applyMode);
-  applyMode();
+  mobileLikeMQ.addEventListener('change', resetOnChange);
+  window.addEventListener('resize', resetOnChange);
+  window.addEventListener('orientationchange', resetOnChange);
+
+  attachHandlers();
 </script>
 </body>
 </html>

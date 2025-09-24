@@ -6,22 +6,21 @@
 <title>Portfolio — 4 kafelki</title>
 <style>
   :root{
-    --bg: #0f1115;
-    --pane: #141821;
-    --text: #e7eaf0;
+    --bg:#0f1115;
+    --pane:#141821;
+    --text:#e7eaf0;
     --muted:#a3adbb;
     --orange:#E84923;
-    --radius: 18px;
-    --gap: 8px;
+    --radius:18px;
+    --gap:8px;
 
-    /* czas animacji szerokości (ms) – trzymamy zgodny z JS */
-    --grid-ms: 720ms;
+    /* Czas poszerzania siatki (musi zgadzać się z JS) */
+    --grid-ms:720ms;
 
-    /* LOGO — rozmiary zależne od ekranu (responsywne) */
-    --logo-idle: clamp(56px, 12vmin, 130px);
-    --logo-active: clamp(92px, 18vmin, 200px);
+    /* Rozmiary logo (responsywne) */
+    --logo-idle:clamp(56px,12vmin,130px);
+    --logo-active:clamp(92px,18vmin,200px);
   }
-
   *{box-sizing:border-box}
   html,body{height:100%;margin:0}
   body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;overflow:hidden}
@@ -29,38 +28,35 @@
   /* ====== GRID ====== */
   .frame{height:100vh;padding:var(--gap)}
   .tiles{
-    display:grid; height:100%;
-    grid-template-rows: 1fr;
-    grid-template-columns: 1fr 1fr 1fr 1fr; /* spoczynek: 4x25% */
-    gap: var(--gap);
-    transition: grid-template-columns var(--grid-ms) cubic-bezier(.68,-0.55,.27,1.55);
+    display:grid;height:100%;
+    grid-template-rows:1fr;
+    grid-template-columns:1fr 1fr 1fr 1fr; /* spoczynek: 4x25% */
+    gap:var(--gap);
+    transition:grid-template-columns var(--grid-ms) cubic-bezier(.68,-0.55,.27,1.55);
   }
-  .tiles[data-active="0"]{ grid-template-columns: 2fr 1fr 1fr 1fr; }
-  .tiles[data-active="1"]{ grid-template-columns: 1fr 2fr 1fr 1fr; }
-  .tiles[data-active="2"]{ grid-template-columns: 1fr 1fr 2fr 1fr; }
-  .tiles[data-active="3"]{ grid-template-columns: 1fr 1fr 1fr 2fr; }
+  .tiles[data-active="0"]{grid-template-columns:2fr 1fr 1fr 1fr}
+  .tiles[data-active="1"]{grid-template-columns:1fr 2fr 1fr 1fr}
+  .tiles[data-active="2"]{grid-template-columns:1fr 1fr 2fr 1fr}
+  .tiles[data-active="3"]{grid-template-columns:1fr 1fr 1fr 2fr}
 
   /* ====== TILE ====== */
   .tile{
-    position:relative;
-    border-radius: var(--radius);
-    background: var(--pane);
-    box-shadow: inset 0 0 0 1px #1b2030;
-    overflow: clip; isolation:isolate; outline:none;
-    transition: background-color .5s cubic-bezier(.68,-0.55,.27,1.55), box-shadow .5s ease;
-    contain: paint layout;
+    position:relative;border-radius:var(--radius);background:var(--pane);
+    box-shadow:inset 0 0 0 1px #1b2030;
+    overflow:clip;isolation:isolate;outline:none;
+    transition:background-color .5s cubic-bezier(.68,-0.55,.27,1.55), box-shadow .5s ease;
+    contain:paint layout;
   }
-  .tile:hover, .tile:focus{ box-shadow: inset 0 0 0 1px #1b2030, 0 10px 40px rgba(0,0,0,.35); }
-  .tile.active{ background: var(--orange); }
+  .tile:hover,.tile:focus{box-shadow:inset 0 0 0 1px #1b2030,0 10px 40px rgba(0,0,0,.35)}
+  .tile.active{background:var(--orange)}
+  .inner{position:absolute;inset:0;padding:22px 24px;display:flex;flex-direction:column;justify-content:flex-end}
 
-  .inner{position:absolute; inset:0; padding:22px 24px; display:flex; flex-direction:column; justify-content:flex-end}
-
-  /* ====== LOGO (IMG, responsywnie) ====== */
+  /* ====== LOGO (IMG, responsywne) ====== */
   .logo{
-    position:absolute; left:50%; top:50%;
-    width:var(--logo-idle); height:var(--logo-idle);
-    transform: translate(-50%,-50%);
-    z-index:2; pointer-events:none;
+    position:absolute;left:50%;top:50%;
+    width:var(--logo-idle);height:var(--logo-idle);
+    transform:translate(-50%,-50%);
+    z-index:2;pointer-events:none;
     transition:
       left var(--grid-ms) cubic-bezier(.68,-0.55,.27,1.55),
       top var(--grid-ms) cubic-bezier(.68,-0.55,.27,1.55),
@@ -69,58 +65,50 @@
       height var(--grid-ms) cubic-bezier(.68,-0.55,.27,1.55),
       filter .45s ease;
     image-rendering:auto;
-    filter: none; /* jasne/ciemne sterujemy filtrem po aktywacji */
   }
   .tile.active .logo{
-    left: calc(100% - 24px);
-    top: 24px;
-    transform: translate(-100%,0);
-    width:var(--logo-active); height:var(--logo-active);
-    /* przy IMG nie zmienimy fill – przyciemniamy filtrem; dla 1:1 koloru wklej inline SVG */
-    filter: brightness(25%) saturate(90%);
+    left:calc(100% - 24px);top:24px;transform:translate(-100%,0);
+    width:var(--logo-active);height:var(--logo-active);
+    /* przy IMG nie zmienimy fill — lekko przyciemniamy; inline SVG = 100% kontrola koloru */
+    filter:brightness(25%) saturate(90%);
   }
 
-  /* ====== LABEL (spoczynek) ====== */
+  /* ====== LABEL (tylko w spoczynku) ====== */
   .label{
-    position:absolute; left:50%; top: calc(50% + min(96px, 9vmin));
-    transform: translateX(-50%);
-    color: var(--muted); font-size: clamp(12px, 1.8vmin, 13px);
-    opacity:.85; pointer-events:none; transition: opacity .3s ease;
+    position:absolute;left:50%;top:calc(50% + min(96px,9vmin));
+    transform:translateX(-50%);color:var(--muted);
+    font-size:clamp(12px,1.8vmin,13px);opacity:.85;pointer-events:none;
+    transition:opacity .3s ease;
   }
-  .tile.active .label{ opacity:0; }
+  .tile.active .label{opacity:0}
 
-  /* ====== CONTENT (pojawia się po rozszerzeniu) ====== */
+  /* ====== CONTENT (pojawia się PO rozszerzeniu) ====== */
   .content{
-    position:absolute; inset:auto 24px 24px 24px; max-width:min(520px, 90%);
-    opacity:0; transform: translateY(10px);
-    transition: opacity .45s ease, transform .45s ease;
-    pointer-events:none; z-index:1;
+    position:absolute;inset:auto 24px 24px 24px;max-width:min(520px,90%);
+    opacity:0;transform:translateY(10px);
+    transition:opacity .45s ease, transform .45s ease;
+    pointer-events:none;z-index:1;
   }
-  /* pojawia się dopiero, gdy JS doda klasę .ready po czasie siatki */
-  .tile.ready .content{ opacity:1; transform:none; pointer-events:auto; }
+  /* JS doda .ready dopiero po zakończeniu animacji szerokości */
+  .tile.ready .content{opacity:1;transform:none;pointer-events:auto}
 
-  .content h2{margin:0 0 6px; font-size: clamp(18px,2.4vw,26px); line-height:1.18; color:#0f1115}
-  .content p{margin:0 0 12px; font-size: clamp(13px,1.4vw,16px); color:#0f1115}
+  .content h2{margin:0 0 6px;font-size:clamp(18px,2.4vw,26px);line-height:1.18;color:#0f1115}
+  .content p{margin:0 0 12px;font-size:clamp(13px,1.4vw,16px);color:#0f1115}
   .btn{
-    display:inline-block; text-decoration:none; background:#0f1115; color:#fff;
-    padding:8px 14px; border-radius:12px; font-weight:600; font-size:14px;
-    border:1px solid #0f1115;
-    transition: transform .25s cubic-bezier(.68,-0.55,.27,1.55), box-shadow .25s ease, background .25s ease;
+    display:inline-block;text-decoration:none;background:#0f1115;color:#fff;
+    padding:8px 14px;border-radius:12px;font-weight:600;font-size:14px;border:1px solid #0f1115;
+    transition:transform .25s cubic-bezier(.68,-0.55,.27,1.55), box-shadow .25s ease, background .25s ease;
   }
-  .btn:hover{ transform: translateY(-2px); box-shadow:0 10px 20px rgba(0,0,0,.25) }
-  .btn:active{ transform:none; background:#171b22 }
+  .btn:hover{transform:translateY(-2px);box-shadow:0 10px 20px rgba(0,0,0,.25)}
+  .btn:active{transform:none;background:#171b22}
 
-  @media (max-width: 900px){
-    :root{
-      --gap: 6px;
-      /* na węskich ekranach label odsuń trochę bliżej logo */
-    }
-    .content{ max-width: 86vw; }
+  @media (max-width:900px){
+    :root{--gap:6px}
+    .content{max-width:86vw}
   }
-
-  @media (prefers-reduced-motion: reduce){
-    .tiles, .tile, .logo, .content, .btn{ transition:none !important }
-    .tile.ready .content{ opacity:1; transform:none; }
+  @media (prefers-reduced-motion:reduce){
+    .tiles,.tile,.logo,.content,.btn{transition:none!important}
+    .tile.ready .content{opacity:1;transform:none}
   }
 </style>
 </head>
@@ -130,119 +118,131 @@
   <section class="tiles" id="tiles" aria-label="Portfolio — sekcje">
 
     <!-- 0: Vector Logo / O mnie -->
-    <a class="tile" href="mailto:twojemail@domena.pl" data-idx="0">
-      <img class="logo" src="./vector_logo.svg" alt="Vector Logo"
-           onerror="this.onerror=null; this.src='./Vector_Logo.svg'">
+    <section class="tile" data-idx="0" tabindex="0" aria-label="O mnie i kontakt">
+      <img class="logo" data-srcs='["vector_logo.svg","Vector_logo.svg","Vector_Logo.svg"]' alt="Vector Logo">
       <div class="label">Vector Logo / O mnie</div>
       <div class="inner">
         <div class="content">
           <h2>O mnie & kontakt</h2>
           <p>Backend/DevOps + 2D/3D. Krótko o mnie i szybki kontakt do współpracy.</p>
-          <span class="btn">Napisz do mnie</span>
+          <a class="btn" href="mailto:twojemail@domena.pl">Napisz do mnie</a>
         </div>
       </div>
-    </a>
+    </section>
 
     <!-- 1: GitHub -->
-    <a class="tile" href="https://github.com/TWOJ_NICK" target="_blank" rel="noopener" data-idx="1">
-      <img class="logo" src="./vector_GitHub.svg" alt="GitHub"
-           onerror="this.onerror=null; this.src='./Vector_GitHub.svg'">
+    <section class="tile" data-idx="1" tabindex="0" aria-label="GitHub — projekty i kod">
+      <img class="logo" data-srcs='["vector_GitHub.svg","Vector_GitHub.svg","vector_github.svg"]' alt="GitHub">
       <div class="label">GitHub</div>
       <div class="inner">
         <div class="content">
           <h2>GitHub — repozytoria & kod</h2>
           <p>Python, Docker, CI/CD, Prometheus/Loki, C4/ADR, agent NIS2 — esencja projektów.</p>
-          <span class="btn">Otwórz GitHuba</span>
+          <a class="btn" href="https://github.com/TWOJ_NICK" target="_blank" rel="noopener">Otwórz GitHuba</a>
         </div>
       </div>
-    </a>
+    </section>
 
     <!-- 2: Google Drive -->
-    <a class="tile" href="https://drive.google.com/drive/folders/TWOJE_FOLDER_ID" target="_blank" rel="noopener" data-idx="2">
-      <img class="logo" src="./Vector_GoogleDrive.svg" alt="Google Drive"
-           onerror="this.onerror=null; this.src='./vector_googledrive.svg'">
+    <section class="tile" data-idx="2" tabindex="0" aria-label="Google Drive — layout/logo/CAD/animacje">
+      <img class="logo" data-srcs='["Vector_GoogleDrive.svg","vector_googledrive.svg","vector_GoogleDrive.svg"]' alt="Google Drive">
       <div class="label">Google Drive</div>
       <div class="inner">
         <div class="content">
           <h2>Google Drive — zbiory projektów</h2>
           <p>Layout/logo, CAD i animacje — uporządkowane paczki do szybkiego podejrzenia.</p>
-          <span class="btn">Otwórz folder</span>
+          <a class="btn" href="https://drive.google.com/drive/folders/TWOJE_FOLDER_ID" target="_blank" rel="noopener">Otwórz folder</a>
         </div>
       </div>
-    </a>
+    </section>
 
     <!-- 3: Instagram -->
-    <a class="tile" href="https://instagram.com/TWOJ_NICK" target="_blank" rel="noopener" data-idx="3">
-      <img class="logo" src="./Vector_insta.svg" alt="Instagram"
-           onerror="this.onerror=null; this.src='./vector_insta.svg'">
+    <section class="tile" data-idx="3" tabindex="0" aria-label="Instagram — CGI artbook">
+      <img class="logo" data-srcs='["Vector_insta.svg","vector_insta.svg","vector_Insta.svg"]' alt="Instagram">
       <div class="label">Instagram</div>
       <div class="inner">
         <div class="content">
           <h2>Instagram — CGI artbook</h2>
           <p>Wybrane rendery i krótkie „behind the scenes”.</p>
-          <span class="btn">Mój profil</span>
+          <a class="btn" href="https://instagram.com/TWOJ_NICK" target="_blank" rel="noopener">Mój profil</a>
         </div>
       </div>
-    </a>
+    </section>
 
   </section>
 </main>
 
 <script>
   // === USTAWIENIA ===
-  const GRID_MS = 720; // musi odpowiadać --grid-ms w CSS (ms)
+  const GRID_MS = 720; // zgodne z --grid-ms
 
-  const tiles = Array.from(document.querySelectorAll('.tile'));
   const grid = document.getElementById('tiles');
+  const tiles = Array.from(document.querySelectorAll('.tile'));
   let showTimer = null;
 
+  // 1) Ładowanie ikon z fallbackami (różne wielkości liter)
+  function loadIcons() {
+    document.querySelectorAll('img.logo').forEach(img => {
+      const candidates = JSON.parse(img.getAttribute('data-srcs') || '[]');
+      const tryNext = (i=0) => {
+        if (i >= candidates.length) return;
+        const src = candidates[i];
+        const test = new Image();
+        test.onload = () => { img.src = src; };
+        test.onerror = () => tryNext(i+1);
+        test.src = src;
+      };
+      tryNext(0);
+    });
+  }
+
+  // 2) Sterowanie aktywnością i opóźnionym pokazaniem treści
   function clearReady() {
     tiles.forEach(t => t.classList.remove('active','ready'));
     grid.removeAttribute('data-active');
     if (showTimer) { clearTimeout(showTimer); showTimer = null; }
   }
-
   function setActive(idx){
-    // 1) Ustaw aktywną kolumnę (rozszerzenie kafla)
     grid.dataset.active = idx;
     tiles.forEach((t,i)=> t.classList.toggle('active', i === +idx));
     tiles.forEach(t => t.classList.remove('ready'));
-
-    // 2) Po zakończeniu animacji siatki dopiero pokaż treść
     if (showTimer) clearTimeout(showTimer);
     showTimer = setTimeout(()=>{
       const activeTile = tiles[idx];
       if (activeTile && activeTile.classList.contains('active')) {
         activeTile.classList.add('ready');
       }
-    }, GRID_MS + 40); // mały buffer
+    }, GRID_MS + 40);
   }
 
-  // Hover / focus (desktop i klawiatura)
+  // Desktop & klawiatura
   tiles.forEach((t,i)=>{
     t.addEventListener('mouseenter', ()=> setActive(i));
     t.addEventListener('focus', ()=> setActive(i));
   });
   grid.addEventListener('mouseleave', clearReady);
 
-  // Mobile (brak hover): pierwszy tap aktywuje (rozszerza), drugi tap w link przechodzi naturalnie
+  // Mobile: pierwszy tap aktywuje, link jest tylko w PRZYCISKU
   const isTouch = matchMedia('(hover: none)').matches;
   if (isTouch) {
     tiles.forEach((t,i)=>{
       t.addEventListener('click', (e)=>{
-        // jeśli nie jest aktywny – aktywuj i zatrzymaj nawigację
+        // Klik w przycisk → zawsze nawiguj
+        if (e.target.closest('.btn')) return;
+        // Klik w kafel → tylko aktywuj (bez nawigacji)
         if (!t.classList.contains('active')) {
           e.preventDefault();
           setActive(i);
         }
-        // jeśli już aktywny – klik w kafel przejdzie do href (dla <a>) lub w przycisk
       });
     });
-    // tap poza siatką — reset
+    // Tap poza siatką — reset
     document.addEventListener('click', (e)=>{
       if (!e.target.closest('.tile')) clearReady();
     });
   }
+
+  loadIcons();
 </script>
 </body>
 </html>

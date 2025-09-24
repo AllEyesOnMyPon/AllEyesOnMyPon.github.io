@@ -5,10 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Jakub Janicki portfolio</title>
 
-<!-- Favicon -->
 <link rel="icon" type="image/svg+xml" href="./Vector_logo.svg" />
-
-<!-- Archivo font -->
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700&display=swap" rel="stylesheet">
 
@@ -23,10 +20,14 @@
     --radius:18px;
     --gap:10px;
 
-    /* desktop icon sizes (zostawione) */
+    /* czasy animacji */
+    --expand-dur:.72s;                   /* czas „bounce” kafelka */
+
+    /* desktop icon sizes */
     --logo-idle-size:130px;
     --logo-active-size:200px;
     --logo-active-top:24px;
+    --logo-right:24px;                   /* odsunięcie od prawej krawędzi */
 
     /* grid (spoczynek) */
     --c1:1fr; --c2:1fr; --c3:1fr; --c4:1fr;
@@ -53,7 +54,7 @@
     height:100%; display:grid; gap:var(--gap);
     grid-template-rows: 1fr;
     grid-template-columns: var(--c1) var(--c2) var(--c3) var(--c4);
-    transition: grid-template-columns .72s var(--back);
+    transition: grid-template-columns var(--expand-dur) var(--back);
   }
 
   /* Desktop hover — expand active column */
@@ -87,13 +88,16 @@
     transform: translate(-50%,-50%);
     z-index:2; pointer-events:none;
     transition:
-      left .72s var(--back), top .72s var(--back),
-      transform .72s var(--back), width .72s var(--back), height .72s var(--back),
-      color .45s var(--back);
+      left var(--expand-dur) var(--back),
+      top var(--expand-dur) var(--back),
+      transform var(--expand-dur) var(--back),
+      width var(--expand-dur) var(--back),
+      height var(--expand-dur) var(--back),
+      color .45s ease;
     color: var(--logo-idle);
   }
   .tile:hover .logo, .tile.active .logo{
-    left: calc(100% - 24px);
+    left: calc(100% - var(--logo-right));
     top: var(--logo-active-top);
     transform: translate(-100%,0);
     width:var(--logo-active-size); height:var(--logo-active-size);
@@ -101,15 +105,20 @@
   }
   .logo svg{ width:100%; height:100%; display:block }
 
-  /* Content */
+  /* Content — NIE podlega „back” (bez bounce), pojawia się po expandzie */
   .content{
     position:absolute; inset:auto 24px 24px 24px; max-width:520px;
     opacity:0; transform: translateY(10px);
-    transition: opacity .45s ease, transform .45s ease;
-    transition-delay: 360ms;
+    transition: opacity .35s ease, transform .35s ease;
+    transition-delay: 0s;                 /* szybkie chowanie */
     pointer-events:none; z-index:1;
   }
-  .tile:hover .content, .tile.active .content{ opacity:1; transform:none; pointer-events:auto; }
+  /* Wejście po zakończeniu rozszerzania */
+  .tile:hover .content,
+  .tile.active .content{
+    opacity:1; transform:none; pointer-events:auto;
+    transition-delay: var(--expand-dur);  /* pokaż PO bounce kafelka */
+  }
 
   .content h2{
     margin:0 0 6px;
@@ -142,17 +151,18 @@
     .tiles, .tile, .logo, .content{ transition:none !important }
   }
 
-  /* MOBILE / TABLET: mniejsze ikony + wyżej osadzony tekst */
+  /* MOBILE / TABLET (portrait tweaks) */
   @media (max-width: 900px){
     :root{
       --gap:8px;
       --logo-idle-size:84px;
       --logo-active-size:136px;
       --logo-active-top:16px;
+      --logo-right:20px;                 /* kilka px bardziej w prawo */
     }
-    /* podnieś trochę content w pionie (zamiast przy samej krawędzi) */
+    /* podniesiony blok treści + większy bottom */
     .content{
-      inset:auto 20px 56px 20px;  /* bottom 44px zamiast 24px -> wyżej */
+      inset:auto 20px 112px 20px;        /* było 44px → 112px */
       max-width: 78vw;
     }
     .content h2{ font-size: clamp(18px,4.8vw,22px) }

@@ -117,13 +117,26 @@
   @media (max-width: 900px){
     :root{
       --gap:8px;
-      --logo-idle-size:84px;
-      --logo-active-size:136px;
-      --logo-active-top:16px;
+
+      /* ~10% mniej vs poprzednie 84px */
+      --logo-idle-size: 76px;
+
+      /* mniejsze aktywne + niższe dokowanie, by nie przycinało */
+      --logo-active-size: 118px;
+      --logo-active-top: calc(env(safe-area-inset-top, 0px) + 36px);
     }
     .content{ max-width: 78vw; }
     .content h2{ font-size: clamp(18px,4.8vw,22px) }
     .content p{ font-size: clamp(13px,3.8vw,16px) }
+  }
+
+  /* bardzo małe telefony (dodatkowy tweak) */
+  @media (max-width: 480px){
+    :root{
+      --logo-idle-size: 70px;
+      --logo-active-size: 108px;
+      --logo-active-top: calc(env(safe-area-inset-top, 0px) + 40px);
+    }
   }
 </style>
 </head>

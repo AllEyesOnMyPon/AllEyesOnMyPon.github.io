@@ -21,7 +21,7 @@
     --gap:10px;
 
     /* czasy animacji */
-    --expand-dur:.72s;                   /* czas „bounce” kafelka */
+    --expand-dur:.48s;                   /* krótszy bounce kafelka (było .72s) */
 
     /* desktop icon sizes */
     --logo-idle-size:130px;
@@ -117,7 +117,7 @@
   .tile:hover .content,
   .tile.active .content{
     opacity:1; transform:none; pointer-events:auto;
-    transition-delay: var(--expand-dur);  /* pokaż PO bounce kafelka */
+    transition-delay: var(--expand-dur);  /* pokaż PO bounce kafelka (0.48s) */
   }
 
   .content h2{
@@ -151,18 +151,38 @@
     .tiles, .tile, .logo, .content{ transition:none !important }
   }
 
-  /* MOBILE / TABLET (portrait tweaks) */
+  /* ===== MOBILE / TABLET (portrait tweaks) ===== */
   @media (max-width: 900px){
     :root{
       --gap:8px;
       --logo-idle-size:84px;
       --logo-active-size:136px;
       --logo-active-top:16px;
-      --logo-right:20px;                 /* kilka px bardziej w prawo */
+      --logo-right:20px;
     }
-    /* podniesiony blok treści + większy bottom */
+
+    /* 50% aktywny + 3x ~16.67% nieaktywne */
+    .tiles:has(.tile.active:nth-child(1)){ grid-template-columns: 2fr .666fr .666fr .666fr; }
+    .tiles:has(.tile.active:nth-child(2)){ grid-template-columns: .666fr 2fr .666fr .666fr; }
+    .tiles:has(.tile.active:nth-child(3)){ grid-template-columns: .666fr .666fr 2fr .666fr; }
+    .tiles:has(.tile.active:nth-child(4)){ grid-template-columns: .666fr .666fr .666fr 2fr; }
+
+    /* (opcjonalnie także dla hover w mobilnym viewport, gdy ktoś używa myszki) */
+    .tiles:has(.tile:nth-child(1):hover){ grid-template-columns: 2fr .666fr .666fr .666fr; }
+    .tiles:has(.tile:nth-child(2):hover){ grid-template-columns: .666fr 2fr .666fr .666fr; }
+    .tiles:has(.tile:nth-child(3):hover){ grid-template-columns: .666fr .666fr 2fr .666fr; }
+    .tiles:has(.tile:nth-child(4):hover){ grid-template-columns: .666fr .666fr .666fr 2fr; }
+
+    /* mniejsze ikony na nieaktywnych podczas aktywacji/hover */
+    .tiles:has(.tile.active) .tile:not(.active) .logo,
+    .tiles:has(.tile:hover) .tile:not(:hover) .logo{
+      width:64px; height:64px;
+      transform: translate(-50%,-50%); /* bez dokowania */
+    }
+
+    /* podniesiony blok treści */
     .content{
-      inset:auto 20px 112px 20px;        /* było 44px → 112px */
+      inset:auto 20px 112px 20px;
       max-width: 78vw;
     }
     .content h2{ font-size: clamp(18px,4.8vw,22px) }
@@ -176,7 +196,7 @@
 <main class="frame">
   <section class="tiles" id="tiles" aria-label="Portfolio — sections">
     <!-- 1: About me -->
-    <a class="tile" href="mailto:klemens.janicki@gmail.com" aria-label="About me & contact">
+    <a class="tile about" data-mail="klemens.janicki@gmail.com" href="#" aria-label="About me & contact">
       <div class="logo" aria-hidden="true">
         <!-- Vector_logo.svg -->
         <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -263,7 +283,27 @@
 </main>
 
 <script>
-  // Mobile/tablet: first tap activates (no navigation), second tap follows link.
+  // About: desktop -> Gmail compose, mobile -> mailto:
+  (function(){
+    const about = document.querySelector('.tile.about');
+    if (!about) return;
+    const email = about.dataset.mail || 'klemens.janicki@gmail.com';
+    const isDesktopLike = matchMedia('(hover: hover)').matches;
+
+    const gmailCompose = 'https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(email);
+    const mailto = 'mailto:' + email;
+
+    if (isDesktopLike) {
+      about.href = gmailCompose;
+      about.target = '_blank';
+      about.rel = 'noopener';
+    } else {
+      about.href = mailto; // mobilnie działa najlepiej
+      about.removeAttribute('target');
+    }
+  })();
+
+  // Mobile: pierwszy tap aktywuje (bez przejścia), drugi tap na link przechodzi.
   const tiles = document.querySelectorAll('.tile');
   const isTouch = matchMedia('(hover: none)').matches;
 

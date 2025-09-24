@@ -122,30 +122,34 @@
     .tiles, .tile, .logo, .content, .btn{ transition:none !important }
   }
 
-  /* ===== MOBILE / TABLET: mniejsze ikony; WYŻSZA TREŚĆ (portrait) ===== */
+  /* ===== MOBILE / TABLET: ustawienia bazowe (≤900px) ===== */
   @media (max-width: 900px){
     :root{
       --gap:8px;
-
-      /* ~10% mniej vs poprzednie 84px */
-      --logo-idle-size: 76px;
-
-      /* mniejsze aktywne + niższe dokowanie, by nie przycinało */
+      --logo-idle-size: 76px;             /* ~10% mniej vs 84px */
       --logo-active-size: 118px;
       --logo-active-top: calc(env(safe-area-inset-top, 0px) + 36px);
 
-      /* treść jeszcze wyżej nad dolną krawędzią */
-      --content-bottom: calc(env(safe-area-inset-bottom, 0px) + 112px);
+      /* portrait ma własny override niżej; tu ustawiamy bezpieczne minimum */
+      --content-bottom: calc(env(safe-area-inset-bottom, 0px) + 48px);
     }
     .content{ max-width: 78vw; }
     .content h2{ font-size: clamp(18px,4.8vw,22px) }
     .content p{ font-size: clamp(13px,3.8vw,16px) }
   }
 
-  /* Dodatkowy tweak tylko dla trybu pionowego (portrait) */
+  /* ===== MOBILE PORTRAIT: treść WYŻEJ, by nie była schowana ===== */
   @media (max-width: 900px) and (orientation: portrait){
     :root{
-      --content-bottom: calc(env(safe-area-inset-bottom, 0px) + 128px);
+      --content-bottom: calc(env(safe-area-inset-bottom, 0px) + 144px);
+    }
+  }
+
+  /* ===== MOBILE LANDSCAPE: treść NIŻEJ (~1.5–2 linijki) ===== */
+  @media (max-width: 900px) and (orientation: landscape){
+    :root{
+      /* mniejszy odstęp od dołu => content schodzi niżej */
+      --content-bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
     }
   }
 
@@ -155,7 +159,6 @@
       --logo-idle-size: 70px;
       --logo-active-size: 108px;
       --logo-active-top: calc(env(safe-area-inset-top, 0px) + 40px);
-      --content-bottom: calc(env(safe-area-inset-bottom, 0px) + 136px);
     }
   }
 </style>
@@ -165,7 +168,7 @@
 <main class="frame">
   <section class="tiles" id="tiles" aria-label="Portfolio — sekcje">
     <!-- 1: Vector Logo / O mnie -->
-    <a class="tile" href="mailto:twojemail@domena.pl" aria-label="O mnie i kontakt">
+    <section class="tile" tabindex="0" aria-label="O mnie i kontakt">
       <div class="logo" aria-hidden="true">
         <!-- Vector_logo.svg (currentColor) -->
         <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -177,13 +180,13 @@
         <div class="content">
           <h2>O mnie & kontakt</h2>
           <p>Backend/DevOps + 2D/3D. Krótko o mnie i szybki kontakt do współpracy.</p>
-          <span class="btn">Napisz do mnie</span>
+          <a class="btn" href="mailto:twojemail@domena.pl">Napisz do mnie</a>
         </div>
       </div>
-    </a>
+    </section>
 
     <!-- 2: GitHub -->
-    <a class="tile" href="https://github.com/TWOJ_NICK" target="_blank" rel="noopener" aria-label="GitHub — projekty i kod">
+    <section class="tile" tabindex="0" aria-label="GitHub — projekty i kod">
       <div class="logo" aria-hidden="true">
         <!-- Vector_GitHub.svg (currentColor) -->
         <svg viewBox="0 0 200 196" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -194,13 +197,13 @@
         <div class="content">
           <h2>GitHub — repozytorium kodu</h2>
           <p>Python, Docker, CI/CD, Prometheus/Loki, C4/ADR, agent NIS2 — esencja projektów.</p>
-          <span class="btn">Przejdź do GitHuba</span>
+          <a class="btn" href="https://github.com/TWOJ_NICK" target="_blank" rel="noopener">Przejdź do GitHuba</a>
         </div>
       </div>
-    </a>
+    </section>
 
     <!-- 3: Google Drive -->
-    <a class="tile" href="https://drive.google.com/drive/folders/TWOJE_FOLDER_ID" target="_blank" rel="noopener" aria-label="Google Drive — zbiory projektów">
+    <section class="tile" tabindex="0" aria-label="Google Drive — zbiory projektów">
       <div class="logo" aria-hidden="true">
         <!-- Vector_GoogleDrive.svg (currentColor) -->
         <svg viewBox="0 0 200 174" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -211,13 +214,13 @@
         <div class="content">
           <h2>Google Drive — zbiory projektów</h2>
           <p>Layout/logo, CAD i animacje — uporządkowane paczki do szybkiego podejrzenia.</p>
-          <span class="btn">Otwórz folder</span>
+          <a class="btn" href="https://drive.google.com/drive/folders/TWOJE_FOLDER_ID" target="_blank" rel="noopener">Otwórz folder</a>
         </div>
       </div>
-    </a>
+    </section>
 
     <!-- 4: Instagram -->
-    <a class="tile" href="https://instagram.com/TWOJ_NICK" target="_blank" rel="noopener" aria-label="Instagram — CGI artbook">
+    <section class="tile" tabindex="0" aria-label="Instagram — CGI artbook">
       <div class="logo" aria-hidden="true">
         <!-- Vector_insta (currentColor) -->
         <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -230,51 +233,71 @@
         <div class="content">
           <h2>Instagram — CGI artbook</h2>
           <p>Wybrane rendery i krótkie „behind the scenes”.</p>
-          <span class="btn">Mój profil</span>
+          <a class="btn" href="https://instagram.com/TWOJ_NICK" target="_blank" rel="noopener">Mój profil</a>
         </div>
       </div>
-    </a>
+    </section>
   </section>
 </main>
 
 <script>
-  // Mobile/tablet: logika kliku:
-  // - klik NIEaktywnego kafla -> aktywuj (bez przejścia)
-  // - klik AKTYWNEGO kafla (poza .btn) -> DEZAKTYWUJ (bez przejścia)
-  // - klik w .btn -> przejście do linku
-  const tiles = document.querySelectorAll('.tile');
+  // Mobile-like tryb: toggle aktywności kafla (klik w kafel),
+  // przejście tylko przez przycisk .btn
+  const tiles = Array.from(document.querySelectorAll('.tile'));
+  const grid = document.querySelector('.tiles');
 
-  const mobileLike = window.matchMedia('(max-width: 900px), (pointer: coarse)').matches;
+  const isMobileLike = window.matchMedia('(max-width: 900px), (pointer: coarse)');
+  function deactivateAll(){
+    tiles.forEach(t => t.classList.remove('active'));
+  }
 
-  if (mobileLike) {
-    tiles.forEach((tile)=>{
-      tile.addEventListener('click', (e)=>{
-        const clickedBtn = e.target.closest('.btn');
+  function setupMobileHandlers(enable){
+    tiles.forEach(tile => {
+      tile.__handler && tile.removeEventListener('click', tile.__handler, {passive:false});
+      if (!enable) return;
 
-        // Jeśli klik w przycisk – pozwól nawigować
-        if (clickedBtn) return;
+      const handler = (e)=>{
+        const btn = e.target.closest('.btn');
+        if (btn) return; // tylko przycisk nawiguję
 
-        // Klik gdziekolwiek w kafel
-        if (!tile.classList.contains('active')) {
-          // był NIEaktywny -> AKTYWUJ
-          e.preventDefault();
-          tiles.forEach(t=>t.classList.remove('active'));
-          tile.classList.add('active');
-        } else {
-          // był AKTYWNY -> DEZAKTYWUJ
+        // toggle aktywny / nieaktywny
+        if (tile.classList.contains('active')) {
           e.preventDefault();
           tile.classList.remove('active');
+        } else {
+          e.preventDefault();
+          deactivateAll();
+          tile.classList.add('active');
         }
-      }, {passive:false});
+      };
+      tile.__handler = handler;
+      tile.addEventListener('click', handler, {passive:false});
     });
 
-    // Tap poza siatką — dezaktywuj wszystkie
-    document.addEventListener('click', (e)=>{
-      if (!e.target.closest('.tile')) {
-        tiles.forEach(t=>t.classList.remove('active'));
-      }
-    });
+    // klik poza siatką = dezaktywuj
+    document.__outsideHandler && document.removeEventListener('click', document.__outsideHandler);
+    if (enable) {
+      const outsideHandler = (e)=>{
+        if (!e.target.closest('.tile')) deactivateAll();
+      };
+      document.__outsideHandler = outsideHandler;
+      document.addEventListener('click', outsideHandler);
+    }
   }
+
+  // Inicjalizacja + reakcja na zmianę trybu/orientacji
+  function applyMode(){
+    setupMobileHandlers(isMobileLike.matches);
+    // Po zmianie rozmiaru/orientacji resetuj aktywność
+    deactivateAll();
+    // Usuwa dataset active z gridu (zostawiamy CSS :has na .active)
+    grid && grid.removeAttribute('data-active');
+  }
+
+  isMobileLike.addEventListener('change', applyMode);
+  window.addEventListener('resize', applyMode);
+  window.addEventListener('orientationchange', applyMode);
+  applyMode();
 </script>
 </body>
 </html>

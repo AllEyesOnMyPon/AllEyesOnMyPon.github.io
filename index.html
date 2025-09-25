@@ -21,7 +21,7 @@
     --gap:10px;
 
     /* czasy animacji */
-    --expand-dur:.48s;                   /* krótszy bounce kafelka (było .72s) */
+    --expand-dur:.48s;                   /* krótszy bounce kafelka */
 
     /* desktop icon sizes */
     --logo-idle-size:130px;
@@ -63,7 +63,7 @@
   .tiles:has(.tile:nth-child(3):hover){ grid-template-columns: 1fr 1fr 2fr 1fr; }
   .tiles:has(.tile:nth-child(4):hover){ grid-template-columns: 1fr 1fr 1fr 2fr; }
 
-  /* Active (mobile / keyboard) */
+  /* Active (mobile / keyboard) — default (desktop-like) */
   .tiles:has(.tile.active:nth-child(1)){ grid-template-columns: 2fr 1fr 1fr 1fr; }
   .tiles:has(.tile.active:nth-child(2)){ grid-template-columns: 1fr 2fr 1fr 1fr; }
   .tiles:has(.tile.active:nth-child(3)){ grid-template-columns: 1fr 1fr 2fr 1fr; }
@@ -105,7 +105,7 @@
   }
   .logo svg{ width:100%; height:100%; display:block }
 
-  /* Content — NIE podlega „back” (bez bounce), pojawia się po expandzie */
+  /* Content — bez bounce; pojawia się po expandzie */
   .content{
     position:absolute; inset:auto 24px 24px 24px; max-width:520px;
     opacity:0; transform: translateY(10px);
@@ -113,11 +113,10 @@
     transition-delay: 0s;                 /* szybkie chowanie */
     pointer-events:none; z-index:1;
   }
-  /* Wejście po zakończeniu rozszerzania */
   .tile:hover .content,
   .tile.active .content{
     opacity:1; transform:none; pointer-events:auto;
-    transition-delay: var(--expand-dur);  /* pokaż PO bounce kafelka (0.48s) */
+    transition-delay: var(--expand-dur);  /* 0.48s */
   }
 
   .content h2{
@@ -151,7 +150,7 @@
     .tiles, .tile, .logo, .content{ transition:none !important }
   }
 
-  /* ===== MOBILE / TABLET (portrait tweaks) ===== */
+  /* ===== MOBILE / TABLET (ogólne) ===== */
   @media (max-width: 900px){
     :root{
       --gap:8px;
@@ -161,26 +160,16 @@
       --logo-right:20px;
     }
 
-    /* 50% aktywny + 3x ~16.67% nieaktywne */
-    .tiles:has(.tile.active:nth-child(1)){ grid-template-columns: 2fr .666fr .666fr .666fr; }
-    .tiles:has(.tile.active:nth-child(2)){ grid-template-columns: .666fr 2fr .666fr .666fr; }
-    .tiles:has(.tile.active:nth-child(3)){ grid-template-columns: .666fr .666fr 2fr .666fr; }
-    .tiles:has(.tile.active:nth-child(4)){ grid-template-columns: .666fr .666fr .666fr 2fr; }
+    /* domyślnie (bez aktywnego) jak było – brak zmian w siatce */
 
-    /* (opcjonalnie także dla hover w mobilnym viewport, gdy ktoś używa myszki) */
-    .tiles:has(.tile:nth-child(1):hover){ grid-template-columns: 2fr .666fr .666fr .666fr; }
-    .tiles:has(.tile:nth-child(2):hover){ grid-template-columns: .666fr 2fr .666fr .666fr; }
-    .tiles:has(.tile:nth-child(3):hover){ grid-template-columns: .666fr .666fr 2fr .666fr; }
-    .tiles:has(.tile:nth-child(4):hover){ grid-template-columns: .666fr .666fr .666fr 2fr; }
-
-    /* mniejsze ikony na nieaktywnych podczas aktywacji/hover */
+    /* mniejsze ikony na nieaktywnych podczas aktywacji/hover (ogólnie dla mobile) */
     .tiles:has(.tile.active) .tile:not(.active) .logo,
     .tiles:has(.tile:hover) .tile:not(:hover) .logo{
       width:64px; height:64px;
-      transform: translate(-50%,-50%); /* bez dokowania */
+      transform: translate(-50%,-50%); /* brak dokowania */
     }
 
-    /* podniesiony blok treści */
+    /* podniesiony blok treści (portret ma override niżej) */
     .content{
       inset:auto 20px 112px 20px;
       max-width: 78vw;
@@ -188,6 +177,34 @@
     .content h2{ font-size: clamp(18px,4.8vw,22px) }
     .hint{ font-size:12px; padding:5px 9px }
     .content p{ font-size: clamp(13px,3.8vw,16px) }
+  }
+
+  /* ===== MOBILE — PORTRAIT: więcej miejsca dla aktywnego + jeszcze mniejsze nieaktywne ikony ===== */
+  @media (max-width: 900px) and (orientation: portrait){
+    /* ~62.5% aktywny (2.5fr) + 3x ~12.5% (0.5fr) */
+    .tiles:has(.tile.active:nth-child(1)){ grid-template-columns: 2.5fr .5fr .5fr .5fr; }
+    .tiles:has(.tile.active:nth-child(2)){ grid-template-columns: .5fr 2.5fr .5fr .5fr; }
+    .tiles:has(.tile.active:nth-child(3)){ grid-template-columns: .5fr .5fr 2.5fr .5fr; }
+    .tiles:has(.tile.active:nth-child(4)){ grid-template-columns: .5fr .5fr .5fr 2.5fr; }
+
+    /* odpowiednik dla hover (gdy ktoś używa myszki przy wąskim oknie) */
+    .tiles:has(.tile:nth-child(1):hover){ grid-template-columns: 2.5fr .5fr .5fr .5fr; }
+    .tiles:has(.tile:nth-child(2):hover){ grid-template-columns: .5fr 2.5fr .5fr .5fr; }
+    .tiles:has(.tile:nth-child(3):hover){ grid-template-columns: .5fr .5fr 2.5fr .5fr; }
+    .tiles:has(.tile:nth-child(4):hover){ grid-template-columns: .5fr .5fr .5fr 2.5fr; }
+
+    /* nieaktywne ikony jeszcze ciut mniejsze, by zyskać przestrzeń */
+    .tiles:has(.tile.active) .tile:not(.active) .logo,
+    .tiles:has(.tile:hover) .tile:not(:hover) .logo{
+      width:56px; height:56px;
+    }
+  }
+
+  /* ===== MOBILE — LANDSCAPE: obniż tekst (mniejszy bottom) ===== */
+  @media (max-width: 900px) and (orientation: landscape){
+    .content{
+      inset:auto 20px 38px 20px; /* ~1/3 z 112px */
+    }
   }
 </style>
 </head>
